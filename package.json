@@ -1,0 +1,16 @@
+{
+  "name": "postgrest-express",
+  "version": "1.0.0",
+  "description": "A postgrest-like app in express.js",
+  "main": "app.js",
+  "scripts": {
+    "serve": "nodemon app.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "nodemon": "^2.0.2",
+    "pg": "^7.14.0"
+  }
+}
