@@ -15,7 +15,7 @@ function buildGet(parsed){
       query += " " + parsed.where[i].key + " " + parsed.where[i].operator + " " + parsed.where[i].value
     }
   }
-  if(parsed.order)
+  if(parsed.order.column)
     if(parsed.order.direction)
       query += "\nORDER BY\n\t" + parsed.order.column + " " + parsed.order.direction
     else
