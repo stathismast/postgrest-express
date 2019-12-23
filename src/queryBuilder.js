@@ -20,6 +20,12 @@ function buildGet(parsed){
       query += "\nORDER BY\n\t" + parsed.order.column + " " + parsed.order.direction
     else
       query += "\nORDER BY\n\t" + parsed.order.column
+  if(parsed.offset){
+    query += "\nOFFSET " + parsed.offset
+  }
+  if(parsed.limit){
+    query += "\nLIMIT " + parsed.limit
+  }
   console.log("\nFinal query:")
   console.log(query)
   return query

@@ -4,9 +4,9 @@ const db = require('../config/database')
 const errorHandler = require('./errorHandler')
 const parser = require('./parser')
 const builder = require('./queryBuilder')
+const headers = require('./headers')
 
 const pool = new pg.Pool(db)
-console.log(pool)
 
 router.get('/', (req, res) => {
   var response = { error: 'No tableName given', records: {}}
@@ -17,6 +17,7 @@ router.get('/:tableName', async (req, res) => {
   try{
     var parsed = parser.parseGet(req)
     var query = builder.buildGet(parsed)
+    res.set(await headers.headersGet(parsed, query, pool))
   }
   catch(err){
     errorHandler.parseError(err, res)

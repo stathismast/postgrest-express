@@ -64,6 +64,17 @@ function parseGet(req){
       x.value = x.value.split('"').join("'")
     }
   }
+
+  // Headers
+  if(req.headers.range){
+    var first = parseInt(req.headers.range.split('-')[0])
+    var second = parseInt(req.headers.range.split('-')[1])
+    if(first && second) parsed.offset = first
+    if(first>=0 && second>=0) parsed.limit = second - first + 1
+  }
+  parsed.exact = (req.headers.prefer == 'count=exact')
+
+
   console.log('\nAfter parsing:')
   console.log(parsed)
   return parsed
