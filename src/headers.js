@@ -22,4 +22,10 @@ async function headersGet(parsed, query, pool){
   return headers
 }
 
-module.exports = { headersGet }
+function headersPost(query){
+  headers = {}
+  headers['SQL-Query'] = query.split('\n').join(' ').split('\t').join('')
+  return headers
+}
+
+module.exports = { headersGet, headersPost }

@@ -80,4 +80,18 @@ function parseGet(req){
   return parsed
 }
 
-module.exports = { parseGet }
+function parsePost(req){
+  var parsed = {}
+  parsed.table = req.params.tableName
+
+  parsed.columns = []
+  parsed.values = []
+  Object.entries(req.body).forEach(([key, value]) => {
+    parsed.columns.push(key)
+    parsed.values.push(value)
+  })
+  console.log(parsed)
+  return parsed
+}
+
+module.exports = { parseGet, parsePost }

@@ -31,4 +31,23 @@ function buildGet(parsed){
   return query
 }
 
-module.exports = { buildGet }
+function buildPost(parsed){
+  var query = "INSERT INTO "
+  query += parsed.table
+  query += " ("
+  for(let i in parsed.columns){
+    query += parsed.columns[i]
+    if(i < parsed.columns.length - 1)
+      query += ", "
+  }
+  query += ") VALUES ("
+  for(let i in parsed.columns){
+    query += JSON.stringify(parsed.values[i]).split('"').join("'")
+    if(i < parsed.values.length - 1)
+      query += ", "
+  }
+  query += ")"
+  return query
+}
+
+module.exports = { buildGet, buildPost }

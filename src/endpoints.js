@@ -33,9 +33,24 @@ router.get('/:tableName', async (req, res) => {
   }
 })
 
-router.post('/:tableName', (req, res) => {
-  var response = { error: '', records: 'POST: ' + req.params.tableName}
-  res.json(response)
+router.post('/:tableName', async (req, res) => {
+  try{
+    var parsed = parser.parsePost(req)
+    var query = builder.buildPost(parsed)
+    res.set(headers.headersPost(query))
+  }
+  catch(err){
+    errorHandler.parseError(err, res)
+    return;
+  }
+  
+  try{
+    const response = await pool.query(query)
+    res.json(response.rows)
+  }
+  catch(err){
+    errorHandler.dbError(err, res)
+  }
 })
 
 router.patch('/:tableName', (req, res) => {
