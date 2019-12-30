@@ -94,4 +94,46 @@ function parsePost(req){
   return parsed
 }
 
-module.exports = { parseGet, parsePost }
+function parsePatch(req){
+  var parsed = {}
+  parsed.table = req.params.tableName
+
+  var query = Object.entries(req.query).map(([key, value]) => ({key,value}))
+  console.log('\nBefore parsing:')
+  console.log(query)
+
+  parsed.where = query
+
+  for(var x of parsed.where){
+    x.operator = operatorMap[x.value.split('.')[0]]
+
+    // If operator is not supported
+    if(!x.operator){
+      throw { detail: "unexpected \"" + x.value.split('.')[0] + "\" expecting operator (eq, gt, ...)", message : "failed to parse filter (" + x.value + ")" }
+    }
+
+    x.value = x.value.split('.')[1]
+
+    // Handle like/ilike and in
+    if(x.operator == 'LIKE' || x.operator == 'ILIKE'){
+      x.value = "'" + x.value.split('*').join('%') + "'"
+    }
+    if(x.operator == 'IN'){
+      x.value = x.value.split('"').join("'")
+    }
+  }
+
+  // Parse body
+  parsed.columns = []
+  parsed.values = []
+  Object.entries(req.body).forEach(([key, value]) => {
+    parsed.columns.push(key)
+    parsed.values.push(value)
+  })
+
+  console.log('\nAfter parsing:')
+  console.log(parsed)
+  return parsed
+}
+
+module.exports = { parseGet, parsePost, parsePatch }

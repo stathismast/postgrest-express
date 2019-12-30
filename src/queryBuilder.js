@@ -50,4 +50,27 @@ function buildPost(parsed){
   return query
 }
 
-module.exports = { buildGet, buildPost }
+function buildPatch(parsed){
+  var query = "UPDATE"
+  query += " " + parsed.table
+  if(parsed.columns && parsed.columns.length){
+    query += "\nSET"
+    for(let i in parsed.columns){
+      query += " " + parsed.columns[i] + " = " + JSON.stringify(parsed.values[i]).split('"').join("'")  
+      if(i < parsed.columns.length - 1) query += ","
+    }
+  }
+  if(parsed.where && parsed.where.length){
+    query += "\nWHERE\n\t"
+    for(var i in parsed.where){
+      if(i>0)
+        query += " AND"
+      query += " " + parsed.where[i].key + " " + parsed.where[i].operator + " " + parsed.where[i].value
+    }
+  }
+  console.log("\nFinal query:")
+  console.log(query)
+  return query
+}
+
+module.exports = { buildGet, buildPost, buildPatch }

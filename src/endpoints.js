@@ -43,7 +43,7 @@ router.post('/:tableName', async (req, res) => {
     errorHandler.parseError(err, res)
     return;
   }
-  
+
   try{
     const response = await pool.query(query)
     res.json(response.rows)
@@ -53,9 +53,24 @@ router.post('/:tableName', async (req, res) => {
   }
 })
 
-router.patch('/:tableName', (req, res) => {
-  var response = { error: '', records: 'PATCH: ' + req.params.tableName}
-  res.json(response)
+router.patch('/:tableName', async (req, res) => {
+  try{
+    var parsed = parser.parsePatch(req)
+    var query = builder.buildPatch(parsed)
+    res.set(headers.headersPatch(query))
+  }
+  catch(err){
+    errorHandler.parseError(err, res)
+    return;
+  }
+
+  try{
+    const response = await pool.query(query)
+    res.json(response.rows)
+  }
+  catch(err){
+    errorHandler.dbError(err, res)
+  }
 })
 
 router.delete('/:tableName', (req, res) => {

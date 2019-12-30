@@ -28,4 +28,10 @@ function headersPost(query){
   return headers
 }
 
-module.exports = { headersGet, headersPost }
+function headersPatch(query){
+  headers = {}
+  headers['SQL-Query'] = query.split('\n').join(' ').split('\t').join('')
+  return headers
+}
+
+module.exports = { headersGet, headersPost, headersPatch }
